@@ -11,73 +11,159 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      initialRoute: '/bienvenida',
+      routes: {
+        '/bienvenida': (context) => BienvenidaScreen(),
+        '/login': (context) => LoginScreen(),
+        '/home': (context) => HomeScreen(),
+      },
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(title: 'Página Flutter de George'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+class BienvenidaScreen extends StatelessWidget {
+  const BienvenidaScreen({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    // Agrega un Future.delayed para mostrar el modal después de 3 segundos
+    Future.delayed(Duration(seconds: 3), () {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/huella.png',
+                  width: 100,
+                  height: 100,
+                ),
+                //Text('Autenticarse con huella'),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Cierra el modal
+                    Navigator.pushNamed(
+                        context, '/home'); // Navega al tercer screen
+                  },
+                  child: Text('Autenticarse con huella digital'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Cierra el modal
+                    Navigator.pushNamed(
+                        context, '/login'); // Navega al segundo screen
+                  },
+                  child: Text('Cerrar'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/fondo1.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              width: double.infinity,
+              height: 127,
+            ),
+            Image.asset(
+              'assets/logo.png',
+              width: 400,
+              height: 400,
+            ),
+            // Text('¡Bienvenido!'),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
+class LoginScreen extends StatelessWidget {
+  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Iniciar Sesión'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Presiona los botones para incrementar o decrementar el contador:',
+            Text('Bienvenido'),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Usuario',
+                ),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline6,
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _passwordController,
+                obscureText: true, // Para contraseñas
+                decoration: InputDecoration(
+                  labelText: 'Contraseña',
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Acción cuando se presiona el botón de inicio de sesión
+                String username = _usernameController.text;
+                String password = _passwordController.text;
+                // Realiza la autenticación o cualquier otra lógica aquí
+                // Por ahora, simplemente navega al tercer screen
+                Navigator.pushNamed(context, '/home');
+              },
+              child: Text('Iniciar Sesión'),
             ),
           ],
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            onPressed: _incrementCounter,
-            tooltip: 'Incrementar',
-            child: const Icon(Icons.add),
-          ),
-          SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: _decrementCounter,
-            tooltip: 'Decrementar',
-            child: const Icon(Icons.remove),
-          ),
-        ],
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Pantalla Principal'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Pantalla Principal'),
+          ],
+        ),
       ),
     );
   }
